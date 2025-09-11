@@ -2,9 +2,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const admin = require("firebase-admin");
+const path = require("path");
 
-// Carrega credenciais
-const serviceAccount = require("./firebase-key.json");
+// Carrega credenciais da conta de serviço
+const serviceAccount = require(path.resolve(__dirname, "firebase-key.json"));
 
 // Inicializa Firebase
 admin.initializeApp({
@@ -21,6 +22,11 @@ app.post("/salvar-triagem", async (req, res) => {
   try {
     const paciente = req.body;
 
+    // Validação simples
+    if (!paciente.nome || !paciente.idade) {
+      return res.status(400).json({ error: "Nome e idade são obrigatórios" });
+    }
+
     // Cria documento com ID automático
     const ref = db.collection("triagemOftalmologia").doc();
     await ref.set({
@@ -33,6 +39,11 @@ app.post("/salvar-triagem", async (req, res) => {
     console.error("Erro ao salvar triagem:", error);
     res.status(500).json({ error: "Erro ao salvar triagem" });
   }
+});
+
+// Teste simples de API
+app.get("/", (req, res) => {
+  res.send("API de triagem está funcionando 🚀");
 });
 
 // Inicia servidor local
