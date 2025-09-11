@@ -4,8 +4,8 @@ const cors = require("cors");
 const admin = require("firebase-admin");
 const path = require("path");
 
-// Carrega credenciais da conta de serviço
-const serviceAccount = require(path.resolve(__dirname, "firebase-key.json"));
+// Carrega credenciais da conta de serviço a partir da variável de ambiente
+const serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
 
 // Inicializa Firebase
 admin.initializeApp({
